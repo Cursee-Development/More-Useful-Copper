@@ -1,6 +1,6 @@
 {
     "schemaVersion": 1,
-    "id": "examplemod",
+    "id": "more_useful_copper",
     "version": "${version}",
     "name": "${mod_name}",
     "description": "${description}",
@@ -16,7 +16,10 @@
     "environment": "*",
     "entrypoints": {
         "main": [
-            "com.cursee.examplemod.ExampleModFabric"
+            "com.cursee.more_useful_copper.MoreUsefulCopperFabric"
+        ],
+        "client": [
+            "com.cursee.more_useful_copper.MoreUsefulCopperFabricClient"
         ]
     },
     "mixins": [
