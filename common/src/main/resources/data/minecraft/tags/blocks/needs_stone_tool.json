@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "more_useful_copper:copper_chain",
+    "more_useful_copper:copper_pressure_plate",
+    "more_useful_copper:copper_button"
+  ]
+}
