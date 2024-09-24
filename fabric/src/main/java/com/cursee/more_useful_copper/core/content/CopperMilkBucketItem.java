@@ -1,6 +1,6 @@
 package com.cursee.more_useful_copper.core.content;
 
-import com.cursee.more_useful_copper.core.registry.FabricRegistry;
+import com.cursee.more_useful_copper.core.registry.RegistryFabric;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -35,7 +35,7 @@ public class CopperMilkBucketItem extends Item {
 			pLivingEntity.removeAllEffects();
 		}
 		
-		return pItemStack.isEmpty() ? new ItemStack(FabricRegistry.COPPER_BUCKET) : pItemStack;
+		return pItemStack.isEmpty() ? new ItemStack(RegistryFabric.COPPER_BUCKET) : pItemStack;
 	}
 	
 	public int getUseDuration(ItemStack $$0) {

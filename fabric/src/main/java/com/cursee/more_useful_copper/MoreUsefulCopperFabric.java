@@ -3,9 +3,8 @@ package com.cursee.more_useful_copper;
 import com.cursee.monolib.core.sailing.Sailing;
 import com.cursee.more_useful_copper.core.entity.custom.CopperGolemEntity;
 import com.cursee.more_useful_copper.core.loot.ModLootTableModifiers;
-import com.cursee.more_useful_copper.core.registry.FabricRegistry;
+import com.cursee.more_useful_copper.core.registry.RegistryFabric;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 
 public class MoreUsefulCopperFabric implements ModInitializer {
@@ -16,7 +15,7 @@ public class MoreUsefulCopperFabric implements ModInitializer {
         MoreUsefulCopper.init();
         Sailing.register(Constants.MOD_NAME, Constants.MOD_ID, Constants.MOD_VERSION, Constants.MC_VERSION_RAW, Constants.PUBLISHER_AUTHOR, Constants.PRIMARY_CURSEFORGE_MODRINTH);
 
-        FabricRegistry.register();
+        RegistryFabric.register();
 
         registerModEntityAttributes();
 
@@ -24,6 +23,6 @@ public class MoreUsefulCopperFabric implements ModInitializer {
     }
 
     private static void registerModEntityAttributes() {
-        FabricDefaultAttributeRegistry.register(FabricRegistry.COPPER_GOLEM, CopperGolemEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(RegistryFabric.COPPER_GOLEM, CopperGolemEntity.createAttributes());
     }
 }

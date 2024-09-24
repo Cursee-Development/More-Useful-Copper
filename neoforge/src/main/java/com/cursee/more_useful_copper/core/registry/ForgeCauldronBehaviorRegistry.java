@@ -22,8 +22,8 @@ public class ForgeCauldronBehaviorRegistry {
 		// 	}, SoundEvents.BUCKET_FILL);
 		// });
 		
-		CAULDRON_WATER_MAP.put(ForgeRegistry.COPPER_WATER_BUCKET.get(), FILL_WATER);
+		CAULDRON_WATER_MAP.put(RegistryNeoForge.COPPER_WATER_BUCKET.get(), FILL_WATER);
 		
-		CauldronInteraction.WATER.putAll(syncronizedCauldronMap);
+		// CauldronInteraction.WATER.putAll(syncronizedCauldronMap);
 	}
 }

@@ -25,7 +25,7 @@ public class CopperGolemAttackGoal extends MeleeAttackGoal {
 	}
 
 	@Override
-	protected void checkAndPerformAttack(LivingEntity pEnemy, double d) {
+	protected void checkAndPerformAttack(LivingEntity pEnemy) {
 		if (isEnemyWithinAttackDistance(pEnemy, 2.5D)) {
 			shouldCountTillNextAttack = true;
 
@@ -45,7 +45,7 @@ public class CopperGolemAttackGoal extends MeleeAttackGoal {
 		}
 	}
 
-//	@Override
+	//	@Override
 //	protected void checkAndPerformAttack(LivingEntity pEnemy) {
 //		if (isEnemyWithinAttackDistance(pEnemy, 2.5D)) {
 //			shouldCountTillNextAttack = true;

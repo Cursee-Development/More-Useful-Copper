@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class CopperGolemRenderer extends MobRenderer<CopperGolemEntity, CopperGolemModel<CopperGolemEntity>> {
 	
-	public static final ResourceLocation COPPER_GOLEM_LOCATION = new ResourceLocation(Constants.MOD_ID, "textures/entity/copper_golem/copper_golem.png");
+	public static final ResourceLocation COPPER_GOLEM_LOCATION = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/entity/copper_golem/copper_golem.png");
 	
 	public CopperGolemRenderer(EntityRendererProvider.Context pContext) {
 		super(pContext, new CopperGolemModel<>(pContext.bakeLayer(ModModelLayers.COPPER_GOLEM)), 1.0F);

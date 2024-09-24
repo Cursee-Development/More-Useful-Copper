@@ -1,6 +1,6 @@
 package com.cursee.more_useful_copper.core.content;
 
-import com.cursee.more_useful_copper.core.registry.FabricRegistry;
+import com.cursee.more_useful_copper.core.registry.RegistryFabric;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -20,7 +20,7 @@ public class CopperSolidBucketItem extends SolidBucketItem {
 		Player $$2 = $$0.getPlayer();
 		if ($$1.consumesAction() && $$2 != null && !$$2.isCreative()) {
 			InteractionHand $$3 = $$0.getHand();
-			$$2.setItemInHand($$3, FabricRegistry.COPPER_BUCKET.getDefaultInstance());
+			$$2.setItemInHand($$3, RegistryFabric.COPPER_BUCKET.getDefaultInstance());
 		}
 		
 		return $$1;

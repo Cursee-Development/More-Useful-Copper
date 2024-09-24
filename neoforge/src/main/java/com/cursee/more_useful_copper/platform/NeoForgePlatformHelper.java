@@ -1,6 +1,6 @@
 package com.cursee.more_useful_copper.platform;
 
-import com.cursee.examplemod.platform.services.IPlatformHelper;
+import com.cursee.more_useful_copper.platform.services.IPlatformHelper;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 

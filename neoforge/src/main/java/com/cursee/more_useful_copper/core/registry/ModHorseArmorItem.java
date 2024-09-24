@@ -10,7 +10,7 @@ public class ModHorseArmorItem extends Item {
 	private final ResourceLocation texture;
 	
 	public ModHorseArmorItem(int p_41364_, String material, Properties properties) {
-		this(p_41364_, new ResourceLocation(Constants.MOD_ID, "textures/entity/horse/armor/horse_armor_" + material + ".png"), properties);
+		this(p_41364_, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/entity/horse/armor/horse_armor_" + material + ".png"), properties);
 	}
 	
 	public ModHorseArmorItem(int p_41364_, ResourceLocation p_41365_, Properties p_41366_) {

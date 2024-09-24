@@ -16,7 +16,10 @@
     "environment": "*",
     "entrypoints": {
         "main": [
-            "com.cursee.examplemod.ExampleModFabric"
+            "com.cursee.more_useful_copper.MoreUsefulCopperFabric"
+        ],
+        "client": [
+            "com.cursee.more_useful_copper.MoreUsefulCopperFabricClient"
         ]
     },
     "mixins": [
@@ -26,7 +29,7 @@
     "depends": {
         "fabricloader": ">=${fabric_loader_version}",
         "fabric-api": "*",
-        "minecraft": "${minecraft_version}",
+        "minecraft": "*",
         "java": ">=${java_version}",
         "monolib": ">=1.3.0"
     },

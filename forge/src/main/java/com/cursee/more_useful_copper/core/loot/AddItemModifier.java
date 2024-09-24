@@ -2,6 +2,7 @@ package com.cursee.more_useful_copper.core.loot;
 
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.item.Item;
@@ -37,9 +38,14 @@ public class AddItemModifier extends LootModifier {
 		
 		return generatedLoot;
 	}
-	
+
 	@Override
-	public Codec<? extends IGlobalLootModifier> codec() {
-		return CODEC.get();
+	public MapCodec<? extends IGlobalLootModifier> codec() {
+		return null;
 	}
+
+//	@Override
+//	public Codec<? extends IGlobalLootModifier> codec() {
+//		return CODEC.get();
+//	}
 }

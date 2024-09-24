@@ -164,9 +164,16 @@ public class CopperGolemEntity extends PathfinderMob implements NeutralMob {
 		return this.entityData.get(ATTACKING);
 	}
 	
+//	@Override
+//	protected void defineSynchedData() {
+//		super.defineSynchedData();
+//		this.entityData.define(ATTACKING, false);
+//	}
+
+
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		this.entityData.define(ATTACKING, false);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(ATTACKING, false);
 	}
 }

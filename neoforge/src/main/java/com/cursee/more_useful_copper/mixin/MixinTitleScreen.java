@@ -1,6 +1,6 @@
 package com.cursee.more_useful_copper.mixin;
 
-import com.cursee.examplemod.Constants;
+import com.cursee.more_useful_copper.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
 import org.spongepowered.asm.mixin.Mixin;

@@ -58,11 +58,17 @@ public class CopperGolemModel<T extends CopperGolemEntity> extends HierarchicalM
 		this.animate(entity.attackAnimationState, GolemAnimations.ATTACK, ageInTicks, 1.0F);
 	}
 
+//	@Override
+//	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+//		golem.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+//	}
+
+
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		golem.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+	public void renderToBuffer(PoseStack stack, VertexConsumer consumer, int i, int j, int k) {
+		golem.render(stack, consumer, i, j);
 	}
-	
+
 	@Override
 	public ModelPart root() {
 		return golem;

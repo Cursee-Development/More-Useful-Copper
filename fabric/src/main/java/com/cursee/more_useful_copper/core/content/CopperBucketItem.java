@@ -1,6 +1,6 @@
 package com.cursee.more_useful_copper.core.content;
 
-import com.cursee.more_useful_copper.core.registry.FabricRegistry;
+import com.cursee.more_useful_copper.core.registry.RegistryFabric;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,8 +26,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class CopperBucketItem extends Item implements DispensibleContainerItem {
 	private final Fluid content;
@@ -59,7 +58,7 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 					vBlockState = pLevel.getBlockState(vBlockPos);
 					
 					// cauldron?
-					ItemStack full = new ItemStack(FabricRegistry.COPPER_WATER_BUCKET);
+					ItemStack full = new ItemStack(RegistryFabric.COPPER_WATER_BUCKET);
 					if (vBlockState.getBlock() == Blocks.WATER_CAULDRON) {
 						// empty the cauldron and replace item in hand with full water bucket
 						
@@ -79,7 +78,7 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 					}
 					
 					// powder snow?
-					ItemStack filled = FabricRegistry.COPPER_POWDER_SNOW_BUCKET.getDefaultInstance();
+					ItemStack filled = RegistryFabric.COPPER_POWDER_SNOW_BUCKET.getDefaultInstance();
 					if (vBlockState.getBlock() == Blocks.POWDER_SNOW) {
 						// empty the snow and replace item in hand with full snow bucket
 						
@@ -102,11 +101,11 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 					if (vBlockState.getBlock() instanceof BucketPickup && vBlockState.getBlock() != Blocks.LAVA && vBlockState.getBlock() != Blocks.LAVA_CAULDRON) {
 						BucketPickup vBucketPickup = (BucketPickup)vBlockState.getBlock();
 //						ItemStack vItemStack1 = vBucketPickup.pickupBlock(pPlayer, pLevel, vBlockPos, vBlockState);
-						ItemStack vItemStack1 = vBucketPickup.pickupBlock(pLevel, vBlockPos, vBlockState);
+						ItemStack vItemStack1 = vBucketPickup.pickupBlock(pPlayer, pLevel, vBlockPos, vBlockState);
 
 						/* ADDED */
 						if (vItemStack1.getItem() == Items.WATER_BUCKET) {
-							vItemStack1 = new ItemStack(FabricRegistry.COPPER_WATER_BUCKET);
+							vItemStack1 = new ItemStack(RegistryFabric.COPPER_WATER_BUCKET);
 						}
 						
 						if (!vItemStack1.isEmpty()) {
@@ -133,7 +132,7 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 					// cauldron?
 					if (vBlockState.getBlock() == Blocks.CAULDRON) {
 						// replace water bucket with empty bucket, set block to full cauldron
-						ItemStack empty = new ItemStack(FabricRegistry.COPPER_BUCKET);
+						ItemStack empty = new ItemStack(RegistryFabric.COPPER_BUCKET);
 						pPlayer.setItemInHand(pInteractionHand, empty);
 						pLevel.setBlock(vBlockPos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3), 3);
 						return InteractionResultHolder.sidedSuccess(empty, pLevel.isClientSide());
@@ -183,11 +182,11 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 					
 					if (/* EDITED */ block instanceof BucketPickup /* ADDED */ && block == Blocks.WATER) {
 						BucketPickup vBucketPickup = (BucketPickup)vBlockState.getBlock();
-						ItemStack vItemStack1 = vBucketPickup.pickupBlock(pLevel, vBlockPos, vBlockState);
+						ItemStack vItemStack1 = vBucketPickup.pickupBlock(pPlayer, pLevel, vBlockPos, vBlockState);
 						
 						/* ADDED */
 						if (vItemStack1.getItem() == Items.WATER_BUCKET) {
-							vItemStack1 = new ItemStack(FabricRegistry.COPPER_WATER_BUCKET);
+							vItemStack1 = new ItemStack(RegistryFabric.COPPER_WATER_BUCKET);
 						}
 						
 						if (!vItemStack1.isEmpty()) {
@@ -228,7 +227,7 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 	}
 	
 	public static ItemStack getEmptySuccessItem(ItemStack stack, Player player) {
-		return !player.getAbilities().instabuild ? new ItemStack(FabricRegistry.COPPER_BUCKET) : stack;
+		return !player.getAbilities().instabuild ? new ItemStack(RegistryFabric.COPPER_BUCKET) : stack;
 	}
 	
 	public void checkExtraContent(@Nullable Player $$0, Level $$1, ItemStack $$2, BlockPos $$3) {
@@ -241,7 +240,7 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 			BlockState state = level.getBlockState(pos);
 			Block block = state.getBlock();
 			boolean $$6 = state.canBeReplaced(this.content);
-			boolean $$7 = state.isAir() || $$6 || block instanceof LiquidBlockContainer && ((LiquidBlockContainer)block).canPlaceLiquid(level, pos, state, this.content);
+			boolean $$7 = state.isAir() || $$6 || block instanceof LiquidBlockContainer && ((LiquidBlockContainer)block).canPlaceLiquid(player, level, pos, state, this.content);
 			if (!$$7) {
 				return result != null && this.emptyContents(player, level, result.getBlockPos().relative(result.getDirection()), (BlockHitResult)null);
 			} else if (level.dimensionType().ultraWarm() && this.content.is(FluidTags.WATER)) {

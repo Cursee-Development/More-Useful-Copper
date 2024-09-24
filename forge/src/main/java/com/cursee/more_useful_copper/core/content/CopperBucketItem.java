@@ -1,6 +1,6 @@
 package com.cursee.more_useful_copper.core.content;
 
-import com.cursee.more_useful_copper.core.registry.ForgeRegistry;
+import com.cursee.more_useful_copper.core.registry.RegistryForge;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -59,7 +59,7 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 					vBlockState = pLevel.getBlockState(vBlockPos);
 					
 					// cauldron?
-					ItemStack full = new ItemStack(ForgeRegistry.COPPER_WATER_BUCKET.get());
+					ItemStack full = new ItemStack(RegistryForge.COPPER_WATER_BUCKET.get());
 					if (vBlockState.getBlock() == Blocks.WATER_CAULDRON) {
 						// empty the cauldron and replace item in hand with full water bucket
 						
@@ -79,7 +79,7 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 					}
 					
 					// powder snow?
-					ItemStack filled = ForgeRegistry.COPPER_POWDER_SNOW_BUCKET.get().getDefaultInstance();
+					ItemStack filled = RegistryForge.COPPER_POWDER_SNOW_BUCKET.get().getDefaultInstance();
 					if (vBlockState.getBlock() == Blocks.POWDER_SNOW) {
 						// empty the snow and replace item in hand with full snow bucket
 						
@@ -101,11 +101,11 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 					// should handle picking up and placing water
 					if (vBlockState.getBlock() instanceof BucketPickup && vBlockState.getBlock() != Blocks.LAVA && vBlockState.getBlock() != Blocks.LAVA_CAULDRON) {
 						BucketPickup vBucketPickup = (BucketPickup)vBlockState.getBlock();
-						ItemStack vItemStack1 = vBucketPickup.pickupBlock(pLevel, vBlockPos, vBlockState);
+						ItemStack vItemStack1 = vBucketPickup.pickupBlock(pPlayer, pLevel, vBlockPos, vBlockState);
 						
 						/* ADDED */
 						if (vItemStack1.getItem() == Items.WATER_BUCKET) {
-							vItemStack1 = new ItemStack(ForgeRegistry.COPPER_WATER_BUCKET.get());
+							vItemStack1 = new ItemStack(RegistryForge.COPPER_WATER_BUCKET.get());
 						}
 						
 						if (!vItemStack1.isEmpty()) {
@@ -132,7 +132,7 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 					// cauldron?
 					if (vBlockState.getBlock() == Blocks.CAULDRON) {
 						// replace water bucket with empty bucket, set block to full cauldron
-						ItemStack empty = new ItemStack(ForgeRegistry.COPPER_BUCKET.get());
+						ItemStack empty = new ItemStack(RegistryForge.COPPER_BUCKET.get());
 						pPlayer.setItemInHand(pInteractionHand, empty);
 						pLevel.setBlock(vBlockPos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3), 3);
 						return InteractionResultHolder.sidedSuccess(empty, pLevel.isClientSide());
@@ -182,11 +182,11 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 					
 					if (/* EDITED */ block instanceof BucketPickup /* ADDED */ && block == Blocks.WATER) {
 						BucketPickup vBucketPickup = (BucketPickup)vBlockState.getBlock();
-						ItemStack vItemStack1 = vBucketPickup.pickupBlock(pLevel, vBlockPos, vBlockState);
+						ItemStack vItemStack1 = vBucketPickup.pickupBlock(pPlayer, pLevel, vBlockPos, vBlockState);
 						
 						/* ADDED */
 						if (vItemStack1.getItem() == Items.WATER_BUCKET) {
-							vItemStack1 = new ItemStack(ForgeRegistry.COPPER_WATER_BUCKET.get());
+							vItemStack1 = new ItemStack(RegistryForge.COPPER_WATER_BUCKET.get());
 						}
 						
 						if (!vItemStack1.isEmpty()) {
@@ -227,7 +227,7 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 	}
 	
 	public static ItemStack getEmptySuccessItem(ItemStack $$0, Player $$1) {
-		return !$$1.getAbilities().instabuild ? new ItemStack(ForgeRegistry.COPPER_BUCKET.get()) : $$0;
+		return !$$1.getAbilities().instabuild ? new ItemStack(RegistryForge.COPPER_BUCKET.get()) : $$0;
 	}
 	
 	public void checkExtraContent(@Nullable Player $$0, Level $$1, ItemStack $$2, BlockPos $$3) {
@@ -240,7 +240,7 @@ public class CopperBucketItem extends Item implements DispensibleContainerItem {
 			BlockState $$4 = $$1.getBlockState($$2);
 			Block $$5 = $$4.getBlock();
 			boolean $$6 = $$4.canBeReplaced(this.content);
-			boolean $$7 = $$4.isAir() || $$6 || $$5 instanceof LiquidBlockContainer && ((LiquidBlockContainer)$$5).canPlaceLiquid($$1, $$2, $$4, this.content);
+			boolean $$7 = $$4.isAir() || $$6 || $$5 instanceof LiquidBlockContainer && ((LiquidBlockContainer)$$5).canPlaceLiquid($$0, $$1, $$2, $$4, this.content);
 			if (!$$7) {
 				return $$3 != null && this.emptyContents($$0, $$1, $$3.getBlockPos().relative($$3.getDirection()), (BlockHitResult)null);
 			} else if ($$1.dimensionType().ultraWarm() && this.content.is(FluidTags.WATER)) {

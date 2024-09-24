@@ -6,5 +6,5 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ModModelLayers {
 	public static final ModelLayerLocation COPPER_GOLEM =
-		new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "copper_golem"), "main");
+		new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "copper_golem"), "main");
 }
