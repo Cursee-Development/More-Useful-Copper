@@ -16,7 +16,7 @@ dependencies {
 
     modImplementation "curse.maven:monolib-968432:5443112"
 
-    modImplementation "curse.maven:bucketlib-560156:5699934"
+    // modImplementation "curse.maven:bucketlib-560156:5699934"
 }
 
 loom {

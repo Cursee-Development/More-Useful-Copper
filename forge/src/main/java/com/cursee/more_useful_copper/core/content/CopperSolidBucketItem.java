@@ -1,28 +1,242 @@
 package com.cursee.more_useful_copper.core.content;
 
-import com.cursee.more_useful_copper.core.registry.ForgeRegistry;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.SolidBucketItem;
+import net.minecraft.world.item.DispensibleContainerItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import org.jetbrains.annotations.Nullable;
 
-public class CopperSolidBucketItem extends SolidBucketItem {
-	public CopperSolidBucketItem(Block p_151187_, SoundEvent p_151188_, Properties p_151189_) {
-		super(p_151187_, p_151188_, p_151189_);
+import java.util.Iterator;
+
+public class CopperSolidBucketItem extends Item implements DispensibleContainerItem {
+
+	private final SoundEvent placeSound;
+	private final Block block;
+
+	public CopperSolidBucketItem(Block block, SoundEvent soundEvent, Properties properties) {
+		super(properties);
+
+		this.block = block;
+		this.placeSound = soundEvent;
 	}
-	
-	@Override
-	public InteractionResult useOn(UseOnContext $$0) {
-		InteractionResult $$1 = super.useOn($$0);
-		Player $$2 = $$0.getPlayer();
-		if ($$1.consumesAction() && $$2 != null && !$$2.isCreative()) {
-			InteractionHand $$3 = $$0.getHand();
-			$$2.setItemInHand($$3, ForgeRegistry.COPPER_BUCKET.get().getDefaultInstance());
+
+	public Block getBlock() {
+		return block;
+	}
+
+	public InteractionResult oldUseOn(UseOnContext useOnContext) {
+		InteractionResult interactionResult = this.place(new BlockPlaceContext(useOnContext));
+		if (!interactionResult.consumesAction() && this.isEdible()) {
+			InteractionResult interactionResult2 = this.use(useOnContext.getLevel(), useOnContext.getPlayer(), useOnContext.getHand()).getResult();
+			return interactionResult2 == InteractionResult.CONSUME ? InteractionResult.CONSUME_PARTIAL : interactionResult2;
+		} else {
+			return interactionResult;
 		}
-		
-		return $$1;
 	}
+
+	public InteractionResult useOn(UseOnContext useOnContext) {
+		InteractionResult interactionResult = oldUseOn(useOnContext);
+		Player player = useOnContext.getPlayer();
+		if (interactionResult.consumesAction() && player != null && !player.isCreative()) {
+			InteractionHand interactionHand = useOnContext.getHand();
+			player.setItemInHand(interactionHand, Items.BUCKET.getDefaultInstance());
+		}
+
+		return interactionResult;
+	}
+
+	public String getDescriptionId() {
+		return this.getOrCreateDescriptionId();
+	}
+
+	protected SoundEvent getPlaceSound(BlockState blockState) {
+		return this.placeSound;
+	}
+
+	public boolean emptyContents(@Nullable Player player, Level level, BlockPos blockPos, @Nullable BlockHitResult blockHitResult) {
+		if (level.isInWorldBounds(blockPos) && level.isEmptyBlock(blockPos)) {
+			if (!level.isClientSide) {
+				level.setBlock(blockPos, this.getBlock().defaultBlockState(), 3);
+			}
+
+			level.gameEvent(player, GameEvent.FLUID_PLACE, blockPos);
+			level.playSound(player, blockPos, this.placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	protected boolean placeBlock(BlockPlaceContext blockPlaceContext, BlockState blockState) {
+		return blockPlaceContext.getLevel().setBlock(blockPlaceContext.getClickedPos(), blockState, 11);
+	}
+
+	public InteractionResult place(BlockPlaceContext blockPlaceContext) {
+		if (!this.getBlock().isEnabled(blockPlaceContext.getLevel().enabledFeatures())) {
+			return InteractionResult.FAIL;
+		} else if (!blockPlaceContext.canPlace()) {
+			return InteractionResult.FAIL;
+		} else {
+			BlockPlaceContext blockPlaceContext2 = this.updatePlacementContext(blockPlaceContext);
+			if (blockPlaceContext2 == null) {
+				return InteractionResult.FAIL;
+			} else {
+				BlockState blockState = this.getPlacementState(blockPlaceContext2);
+				if (blockState == null) {
+					return InteractionResult.FAIL;
+				} else if (!this.placeBlock(blockPlaceContext2, blockState)) {
+					return InteractionResult.FAIL;
+				} else {
+					BlockPos blockPos = blockPlaceContext2.getClickedPos();
+					Level level = blockPlaceContext2.getLevel();
+					Player player = blockPlaceContext2.getPlayer();
+					ItemStack itemStack = blockPlaceContext2.getItemInHand();
+					BlockState blockState2 = level.getBlockState(blockPos);
+					if (blockState2.is(blockState.getBlock())) {
+						blockState2 = this.updateBlockStateFromTag(blockPos, level, itemStack, blockState2);
+						this.updateCustomBlockEntityTag(blockPos, level, player, itemStack, blockState2);
+						blockState2.getBlock().setPlacedBy(level, blockPos, blockState2, player, itemStack);
+						if (player instanceof ServerPlayer) {
+							CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer)player, blockPos, itemStack);
+						}
+					}
+
+					SoundType soundType = blockState2.getSoundType();
+					level.playSound(player, blockPos, this.getPlaceSound(blockState2), SoundSource.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
+					level.gameEvent(GameEvent.BLOCK_PLACE, blockPos, GameEvent.Context.of(player, blockState2));
+					if (player == null || !player.getAbilities().instabuild) {
+						itemStack.shrink(1);
+					}
+
+					return InteractionResult.sidedSuccess(level.isClientSide);
+				}
+			}
+		}
+	}
+
+	@Nullable
+	public BlockPlaceContext updatePlacementContext(BlockPlaceContext blockPlaceContext) {
+		return blockPlaceContext;
+	}
+
+	@Nullable
+	public static CompoundTag getBlockEntityData(ItemStack itemStack) {
+		return itemStack.getTagElement("BlockEntityTag");
+	}
+
+	public static boolean updateCustomBlockEntityTag(Level level, @Nullable Player player, BlockPos blockPos, ItemStack itemStack) {
+		MinecraftServer minecraftServer = level.getServer();
+		if (minecraftServer == null) {
+			return false;
+		} else {
+			CompoundTag compoundTag = getBlockEntityData(itemStack);
+			if (compoundTag != null) {
+				BlockEntity blockEntity = level.getBlockEntity(blockPos);
+				if (blockEntity != null) {
+					if (!level.isClientSide && blockEntity.onlyOpCanSetNbt() && (player == null || !player.canUseGameMasterBlocks())) {
+						return false;
+					}
+
+					CompoundTag compoundTag2 = blockEntity.saveWithoutMetadata();
+					CompoundTag compoundTag3 = compoundTag2.copy();
+					compoundTag2.merge(compoundTag);
+					if (!compoundTag2.equals(compoundTag3)) {
+						blockEntity.load(compoundTag2);
+						blockEntity.setChanged();
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+	}
+
+	protected boolean updateCustomBlockEntityTag(BlockPos blockPos, Level level, @Nullable Player player, ItemStack itemStack, BlockState blockState) {
+		return updateCustomBlockEntityTag(level, player, blockPos, itemStack);
+	}
+
+	protected boolean canPlace(BlockPlaceContext blockPlaceContext, BlockState blockState) {
+		Player player = blockPlaceContext.getPlayer();
+		CollisionContext collisionContext = player == null ? CollisionContext.empty() : CollisionContext.of(player);
+		return (!this.mustSurvive() || blockState.canSurvive(blockPlaceContext.getLevel(), blockPlaceContext.getClickedPos())) && blockPlaceContext.getLevel().isUnobstructed(blockState, blockPlaceContext.getClickedPos(), collisionContext);
+	}
+
+	protected boolean mustSurvive() {
+		return true;
+	}
+
+	@Nullable
+	protected BlockState getPlacementState(BlockPlaceContext blockPlaceContext) {
+		BlockState blockState = this.getBlock().getStateForPlacement(blockPlaceContext);
+		return blockState != null && this.canPlace(blockPlaceContext, blockState) ? blockState : null;
+	}
+
+	private BlockState updateBlockStateFromTag(BlockPos blockPos, Level level, ItemStack itemStack, BlockState blockState) {
+		BlockState blockState2 = blockState;
+		CompoundTag compoundTag = itemStack.getTag();
+		if (compoundTag != null) {
+			CompoundTag compoundTag2 = compoundTag.getCompound("BlockStateTag");
+			StateDefinition<Block, BlockState> stateDefinition = blockState2.getBlock().getStateDefinition();
+			Iterator var9 = compoundTag2.getAllKeys().iterator();
+
+			while(var9.hasNext()) {
+				String string = (String)var9.next();
+				Property<?> property = stateDefinition.getProperty(string);
+				if (property != null) {
+					String string2 = compoundTag2.get(string).getAsString();
+					blockState2 = updateState(blockState2, property, string2);
+				}
+			}
+		}
+
+		if (blockState2 != blockState) {
+			level.setBlock(blockPos, blockState2, 2);
+		}
+
+		return blockState2;
+	}
+
+	private static <T extends Comparable<T>> BlockState updateState(BlockState blockState, Property<T> property, String string) {
+		return (BlockState)property.getValue(string).map((comparable) -> {
+			return (BlockState)blockState.setValue(property, comparable);
+		}).orElse(blockState);
+	}
+//	public CopperSolidBucketItem(Block p_151187_, SoundEvent p_151188_, Properties p_151189_) {
+//		super(p_151187_, p_151188_, p_151189_);
+//	}
+//
+//	@Override
+//	public InteractionResult useOn(UseOnContext $$0) {
+//		InteractionResult $$1 = super.useOn($$0);
+//		Player $$2 = $$0.getPlayer();
+//		if ($$1.consumesAction() && $$2 != null && !$$2.isCreative()) {
+//			InteractionHand $$3 = $$0.getHand();
+//			$$2.setItemInHand($$3, FabricRegistry.COPPER_BUCKET.getDefaultInstance());
+//		}
+//
+//		return $$1;
+//	}
 }
