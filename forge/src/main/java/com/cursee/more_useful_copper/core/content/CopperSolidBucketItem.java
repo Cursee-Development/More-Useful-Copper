@@ -1,5 +1,6 @@
 package com.cursee.more_useful_copper.core.content;
 
+import com.cursee.more_useful_copper.core.registry.ForgeRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -61,7 +62,7 @@ public class CopperSolidBucketItem extends Item implements DispensibleContainerI
 		Player player = useOnContext.getPlayer();
 		if (interactionResult.consumesAction() && player != null && !player.isCreative()) {
 			InteractionHand interactionHand = useOnContext.getHand();
-			player.setItemInHand(interactionHand, Items.BUCKET.getDefaultInstance());
+			player.setItemInHand(interactionHand, ForgeRegistry.COPPER_BUCKET.get().getDefaultInstance());
 		}
 
 		return interactionResult;

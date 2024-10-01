@@ -59,7 +59,7 @@ public class CopperSolidBucketItem extends Item implements DispensibleContainerI
 		Player player = useOnContext.getPlayer();
 		if (interactionResult.consumesAction() && player != null && !player.isCreative()) {
 			InteractionHand interactionHand = useOnContext.getHand();
-			player.setItemInHand(interactionHand, Items.BUCKET.getDefaultInstance());
+			player.setItemInHand(interactionHand, FabricRegistry.COPPER_BUCKET.getDefaultInstance());
 		}
 
 		return interactionResult;
