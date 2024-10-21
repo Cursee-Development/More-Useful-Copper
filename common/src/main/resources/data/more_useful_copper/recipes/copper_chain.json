@@ -4,12 +4,15 @@
   "key": {
     "I": {
       "item": "minecraft:copper_ingot"
+    },
+    "N": {
+      "item": "more_useful_copper:copper_nugget"
     }
   },
   "pattern": [
-    "  I",
-    " I ",
-    "I  "
+    "N",
+    "I",
+    "N"
   ],
   "result": {
     "count": 2,

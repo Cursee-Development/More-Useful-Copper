@@ -66,7 +66,9 @@ public class FabricRegistry {
 	public static final Item COPPER_CHESTPLATE;
 	public static final Item COPPER_LEGGINGS;
 	public static final Item COPPER_BOOTS;
-	
+
+	public static final Item COPPER_NUGGET;
+
 	// Define CreativeModeTab
 	public static final CreativeModeTab MOREUSEFULCOPPER_TAB;
 	
@@ -100,7 +102,8 @@ public class FabricRegistry {
 		COPPER_CHESTPLATE = registerItem("copper_chestplate", new ArmorItem(ModArmorMaterials.COPPER, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
 		COPPER_LEGGINGS = registerItem("copper_leggings", new ArmorItem(ModArmorMaterials.COPPER, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
 		COPPER_BOOTS = registerItem("copper_boots", new ArmorItem(ModArmorMaterials.COPPER, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
-		
+
+		COPPER_NUGGET = registerItem("copper_nugget", new Item(new Item.Properties()));
 		
 		
 		// CreativeModeTab
@@ -130,6 +133,7 @@ public class FabricRegistry {
 				output.accept(COPPER_CHAIN);
 				output.accept(COPPER_BUTTON);
 				output.accept(COPPER_PRESSURE_PLATE);
+				output.accept(COPPER_NUGGET);
 			})
 			.build();
 	}
