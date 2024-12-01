@@ -33,7 +33,7 @@ public class RegistryNeoForge {
 	public static DeferredRegister<CreativeModeTab> CREATIVE_MODE_TAB;
 	
 	// BlockItem Registration Methods
-	private static <T extends Block> DeferredHolder<Block, T> registerBlock(String name, Supplier<T> block) {
+	private static <T extends Block> DeferredHolder<Block, T> registerBlockWithItem(String name, Supplier<T> block) {
 		DeferredHolder<Block, T> toReturn = BLOCK.register(name, block);
 		registerBlockItem(name, toReturn);
 		return toReturn;
@@ -88,9 +88,9 @@ public class RegistryNeoForge {
 		CREATIVE_MODE_TAB = DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), Constants.MOD_ID);
 		
 		// Blocks
-		COPPER_CHAIN = registerBlock("copper_chain", () -> new ChainBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHAIN)));
-		COPPER_BUTTON = registerBlock("copper_button", () -> new ButtonBlock(BlockSetType.STONE, 20, BlockBehaviour.Properties.of().noCollission().requiresCorrectToolForDrops() .strength(0.5F).pushReaction(PushReaction.DESTROY)));
-		COPPER_PRESSURE_PLATE = registerBlock("copper_pressure_plate", () -> new WeightedPressurePlateBlock(150, BlockSetType.IRON, BlockBehaviour.Properties.of().mapColor(MapColor.METAL).forceSolidOn().requiresCorrectToolForDrops().noCollission().strength(0.5F).pushReaction(PushReaction.DESTROY)));
+		COPPER_CHAIN = registerBlockWithItem("copper_chain", () -> new ChainBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHAIN)));
+		COPPER_BUTTON = registerBlockWithItem("copper_button", () -> new ButtonBlock(BlockSetType.STONE, 20, BlockBehaviour.Properties.of().noCollission().requiresCorrectToolForDrops() .strength(0.5F).pushReaction(PushReaction.DESTROY)));
+		COPPER_PRESSURE_PLATE = registerBlockWithItem("copper_pressure_plate", () -> new WeightedPressurePlateBlock(150, BlockSetType.IRON, BlockBehaviour.Properties.of().mapColor(MapColor.METAL).forceSolidOn().requiresCorrectToolForDrops().noCollission().strength(0.5F).pushReaction(PushReaction.DESTROY)));
 		
 		// Entity
 		COPPER_GOLEM = ENTITY_TYPE.register("", () -> EntityType.Builder.of(CopperGolemEntity::new, MobCategory.MISC).sized(1.4F, 2.7F).clientTrackingRange(10).build("copper_golem"));
